@@ -1,0 +1,44 @@
+
+The **Nacha MVP** is lean and high-impact, here is the component mapping for each stage of the "Nacha Sentinel" workflow. This clarifies which part of your stack handles the heavy lifting.
+
+---
+
+### **1. The Data Input (The Shredder)**
+* **Involved Component:** **`velo-stream` (Apps/Jobs)**
+* **The Action:** This is the high-speed Rust "Ingressor." It utilizes the native `velo-stream` binary to perform fixed-width ASCII parsing.
+* **The Value:** By handling the shredding at the edge (via IPC Sockets), you offload the "Heavy Lift" from the database.
+
+### 2. The Agent Logic (The Decision Maker)
+* **Involved Component:** **`velo-agent` (Framework)**
+* **The Action:** The agent receives a Protobuf packet from `velo-stream`. It uses its **Nacha Persona** to analyze the "Business Email Compromise" risk.
+* **The Value:** It leverages the **MCP API** to check external vendor lists, making the "Stop/Go" decision based on real-time external context.
+
+### 3. The Validation (Nacha Stress Test)
+* **Involved Component:** **`velo-test` (Simulation Engine)**
+* **The Action:** Generates the "Red Team" data (mule accounts, synthetic IDs) and feeds it into the `velo-stream` job to verify the agent's logic.
+* **The Value:** Provides the statistical proof needed for compliance. It bridges the gap between "I think this works" and "I have proof for the auditor."
+
+### 4. The UI & Human-in-the-Loop
+* **Involved Component:** **`velo-studio` (Control Plane)**
+* **The Action:** The human analyst sees the "Pressure Gauge" and the natural language explanation of blocked batches.
+* **The Value:** This is where the **Chat-UI** lives. It allows the user to interrogate the **`velo-agent`** using SQL or natural language.
+
+---
+
+### **Summary Table: The MVP Component Map**
+
+| MVP Workflow Step | Primary Component | Secondary Component |
+| :--- | :--- | :--- |
+| **ACH Ingestion / Shredding** | `velo-stream` | Kafka |
+| **Real-time Risk Decisioning** | `velo-agent` | `velo-stream` (via IPC) |
+| **External Vendor Verification** | `velo-agent` | MCP API |
+| **Backtesting & Compliance Proof** | `velo-test` | `velo-agent` (for reporting) |
+| **Monitoring & Rule Tuning** | `velo-studio` | `velo-agent` (Chat-UI) |
+| **Audit Logging & Tracing** | Kafka / Tempo | `velo-agent` (Metadata Emitter) |
+
+---
+
+### **The "Why" for GTM:**
+By tagging these clearly, you show a prospect that you have a **Modular Defense.** If they already have a UI they like, you can sell them just the `velo-stream` + `velo-agent` (the engine). If they are starting from scratch to hit the June 2026 deadline, you sell them the **Full Sentinel Stack.**
+
+**Does this mapping help you see where the development bottlenecks might be, or should we refine the IPC communication protocol between `velo-stream` and `velo-agent` next?**
